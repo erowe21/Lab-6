@@ -257,11 +257,20 @@ public class PokerTableController implements Initializable {
 
 			RotateTransition rotT = CreateRotateTransition(img);
 			ScaleTransition scaleT = CreateScaleTransition(img);
-			PathTransition pathT = CreatePathTransition(pntDeck,
-			 pntCardDealt, img);
+			Path p = new Path();
+			MoveTo moveTo= new MoveTo(pntDeck.getX(),pntDeck.getY());
+			CubicCurveTo curveTo=new CubicCurveTo(200,300,pntDeck.getX(),pntDeck.getY(), pntCardDealt.getX(), pntCardDealt.getY());
+			p.getElements().add(moveTo);
+			p.getElements().add(curveTo);
+			PathTransition pt = new PathTransition();
+			pt.setDuration(Duration.millis(500));
+			pt.setNode(img);				pt.setPath(p);
+			pt.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+			pt.setCycleCount(1);
+			pt.setAutoReverse(false);
 
 			ParallelTransition patTMoveRot = new ParallelTransition();
-			patTMoveRot.getChildren().addAll(rotT, pathT);
+			patTMoveRot.getChildren().addAll(rotT, pt);
 			// patTMoveRot.getChildren().addAll(pathT, rotT);
 
 			ParallelTransition patTFadeInFadeOut = createFadeTransition(
@@ -304,7 +313,7 @@ public class PokerTableController implements Initializable {
 				toPoint.getY() / 3, toPoint.getX(), toPoint.getY()));
 		// path.getElements().add(new CubicCurveTo(0, 120, 0, 240, 380, 240));
 		PathTransition pathTransition = new PathTransition();
-		pathTransition.setDuration(Duration.millis(750));
+		pathTransition.setDuration(Duration.millis(1000));
 		pathTransition.setPath(path);
 		pathTransition.setNode(img);
 		pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
